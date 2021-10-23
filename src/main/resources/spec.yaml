@@ -6,17 +6,41 @@ info:
 servers:
   - url: 'http'
 paths:
-  /cake:
-    get:
-      description: return list of avaliable cakes
-      responses:
-        200:
-          description: ok
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: '#/components/schemas/cakes'
+
+ /cake:
+   post:
+     description: add new cake to cake list
+     requestBody:
+       required: true
+       content:
+         application/json:
+           schema:
+             $ref:
+              '#/components/schemas/cake'
+     responses:
+       '200':
+         description: Successfully created a new cake
+       '400':
+         description: Invalid request
+         content:
+           application/json:
+             schema:
+               type: object
+               properties:
+                 message:
+                   type: string
+
+  get:
+    description: return list of avaliable cakes
+    responses:
+       200:
+         description: ok
+         content:
+          application/json:
+             schema:
+               oneOf:
+                - $ref: '#/components/schemas/cakes'
+
 
 
 components:

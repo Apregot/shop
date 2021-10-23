@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Schema(description = "Short Info about cakes")
 @Validated
 public class Cake {
-    @NotNull
+    //@NotNull
     @Schema(description = "Id of cake", required = true)
     @JsonProperty("id")
     private Long id;

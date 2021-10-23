@@ -1,16 +1,13 @@
 package com.melnikovsavva.shop.rest.controller;
 
-
 import com.melnikovsavva.shop.dto.Cake;
 import com.melnikovsavva.shop.dto.Cakes;
 import com.melnikovsavva.shop.exception.CakeNotFoundException;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +16,8 @@ import java.util.List;
 @Validated
 //@RequestMapping ("v1/cakes")
 public class CakeController {
+
+    private Long availableId = 3L;
     private final Cakes cakeList = new Cakes();
 
     public CakeController(){
@@ -59,5 +58,13 @@ public class CakeController {
                 .findFirst()
                 .orElseThrow(()->new CakeNotFoundException("Cake not found."));
     }
-//Пользоваться cakeList.stream
+
+    @PostMapping(path = "cake",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public void addCake(@Valid @RequestBody Cake newCake){
+        newCake.setId(availableId);
+        cakeList.getCakeList().add(newCake);
+        availableId++;
+    }
 }
