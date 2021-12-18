@@ -1,4 +1,4 @@
-package com.melnikovsavva.shop.dto;
+package com.melnikovsavva.shop.rest.dto.cake;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -6,14 +6,15 @@ import lombok.Data;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.math.BigDecimal;
 
 @Data
-@Schema(description = "Short Info about cakes")
+@Schema(description = "Info about cake")
 @Validated
 public class Cake {
-    @NotNull
-    @Schema(description = "Id of cake", required = true)
+    @Null
+    @Schema(description = "Id of cake", required = false)
     @JsonProperty("id")
     private Long id;
 
