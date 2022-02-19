@@ -1,9 +1,12 @@
 package com.melnikovsavva.shop.rest.controller;
 
-import com.melnikovsavva.shop.goods.CakeService;
-import com.melnikovsavva.shop.orders.OrderService;
+import com.melnikovsavva.shop.exception.UserExistException;
+import com.melnikovsavva.shop.db.goods.CakeService;
+import com.melnikovsavva.shop.db.orders.OrderService;
 import com.melnikovsavva.shop.rest.dto.cake.Cake;
 import com.melnikovsavva.shop.rest.dto.cake.Cakes;
+import com.melnikovsavva.shop.rest.dto.order.Order;
+import com.melnikovsavva.shop.db.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,30 +15,25 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @Validated
-//@RequestMapping ("v1/cakes")
 public class UserController {
 
-    private Long availableId = 3L;
-    private final Cakes cakeList = new Cakes();
     private final CakeService cakesService;
     private final OrderService orderService;
+    private final UserService userService;
 
     @Autowired
-    public UserController(CakeService cakesService, OrderService orderService) {
-        List<Cake> tmp = new ArrayList<Cake>();
-        cakeList.setCakeList(tmp);
+    public UserController(CakeService cakesService, OrderService orderService, UserService userService) {
         this.cakesService = cakesService;
         this.orderService = orderService;
+        this.userService = userService;
     }
 
 
     @GetMapping(value = "cakes", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Cakes cakes(){
+    public Cakes getCakes(){
         return cakesService.getCakes();
     }
 
@@ -45,15 +43,30 @@ public class UserController {
         return cakesService.getCake(id);
     }
 
+    @ResponseStatus(code = HttpStatus.CREATED)
     @PostMapping(path = "cake",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Cake> addCake(@Valid @RequestBody Cake newCake){
-        newCake.setId(availableId);
-        cakeList.getCakeList().add(newCake);
-        availableId++;
+    public void createCake(@Valid @RequestBody Cake newCake){
+        cakesService.addCake(newCake);
+    }
+
+    @ResponseStatus(code = HttpStatus.CREATED)
+    @PostMapping(path = "addOrder",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Order> createOrder(@Valid @RequestBody Order newOrder){
+        //try {
+            userService.getOrCreateUser(newOrder.getUser());
+  //      }
+//        catch (UserExistException ignored){
+//
+//        }
+        orderService.createOrder(newOrder);
         return new ResponseEntity<>( HttpStatus.CREATED);
     }
+
+
 
 
 

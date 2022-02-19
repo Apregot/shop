@@ -43,4 +43,9 @@ public class Cake {
     @JsonProperty("weight")
     private BigDecimal weight;
 
+    @NotNull
+    @Schema(description = "Cake description", required = true)
+    @JsonProperty("description")
+    private String description;
+
 }
