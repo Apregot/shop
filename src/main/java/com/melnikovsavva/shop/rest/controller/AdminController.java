@@ -32,8 +32,8 @@ import java.util.stream.Stream;
 @RequestMapping("/admin")
 public class AdminController {
 
-    //@Value("${pathname.upload}")
-    //private final String pathnameUpload = "";
+    @Value("${IMAGE_UPLOAD_PATH}")
+    private String pathUpload;
     @Autowired
     private HttpServletRequest request;
 
@@ -72,7 +72,7 @@ public class AdminController {
     public String addUserSubmit(@ModelAttribute User user, Model model){
         model.addAttribute("user", user);
         userService.getOrCreateUser(user);
-        return "addUserResult";
+        return "user";
     }
 
     @PostMapping("/updateCommonInfoAboutUser")
@@ -169,7 +169,8 @@ public class AdminController {
     private String uploadImage(MultipartFile imgFile){
 
         Path relativePath = Paths.get("src/main/resources/static");
-        Path absolutePath = relativePath.toAbsolutePath();
+        //Path absolutePath = relativePath.toAbsolutePath();
+        Path absolutePath = Paths.get("C:\\Users\\mdv75\\IdeaProjects\\shop\\src\\main\\resources\\static");
         String fileName = UUID.randomUUID().toString().replace("-", "") + ".jpg";
         File file = new File(absolutePath + "/" + fileName);
         try {

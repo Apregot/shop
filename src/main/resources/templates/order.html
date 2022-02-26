@@ -49,7 +49,7 @@
         <div class="allowed">
           <div>Доступные торты:</div>
           <div class="allowed-item" th:each="cake : ${cakeList}" th:text="${cake.getName()}"
-               th:id="${cake.getId()}" th:unless="${order.cakeIds.contains(cake.id)}"></div>
+               th:id="${cake.getId()}" th:unless="${order.cakeIds.contains(cake.getId())}"></div>
         </div>
       </div>
       <input type="submit" value="Save">

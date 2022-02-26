@@ -145,8 +145,8 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public List<Order> getOrderByNumber(String number, Integer page) {
-        Pageable limit = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "date"));
-        List<OrderEntity> orderEntities = orderRepository.findByUser_Number(number, limit);
+        Pageable limit = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "status"));
+        List<OrderEntity> orderEntities = orderRepository.findAllByUser_Number(number, limit);
         return orderEntities.stream().map(this::mapOrderEntityToOrder).collect(Collectors.toList());
     }
 
