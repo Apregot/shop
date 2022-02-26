@@ -41,6 +41,25 @@
             </form>
         </tr>
     </table>
+    <div class="deleteBlock">
+        <form th:action="@{/admin/deleteCake}" th:object="${cake}" th:method="post">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <td>
+                    <input style="height:15px;width:137px" type="number" th:field="*{id}">
+                </td>
+                <td>
+                    <button type="submit">delete</button>
+                </td>
+                </tr>
+            </table>
+        </form>
+    </div>
 </div>
 
 <h1>Добавить торт</h1>

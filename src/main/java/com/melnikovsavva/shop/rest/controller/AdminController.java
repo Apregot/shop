@@ -3,6 +3,8 @@ package com.melnikovsavva.shop.rest.controller;
 import com.melnikovsavva.shop.db.goods.CakeService;
 import com.melnikovsavva.shop.db.orders.OrderService;
 import com.melnikovsavva.shop.db.users.UserService;
+import com.melnikovsavva.shop.exception.CakeNotFoundException;
+import com.melnikovsavva.shop.exception.UserExistException;
 import com.melnikovsavva.shop.rest.dto.cake.Cake;
 import com.melnikovsavva.shop.rest.dto.cake.Cakes;
 import com.melnikovsavva.shop.rest.dto.order.Order;
@@ -31,12 +33,6 @@ import java.util.stream.Stream;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-
-    @Value("${IMAGE_UPLOAD_PATH}")
-    private String pathUpload;
-    @Autowired
-    private HttpServletRequest request;
-
 
     private final UserService userService;
     private final OrderService orderService;
@@ -70,9 +66,12 @@ public class AdminController {
 
     @PostMapping("/user")
     public String addUserSubmit(@ModelAttribute User user, Model model){
+        if(user.getNumber().equals("")){
+            return "user";
+        }
         model.addAttribute("user", user);
         userService.getOrCreateUser(user);
-        return "user";
+        return "addUserResult";
     }
 
     @PostMapping("/updateCommonInfoAboutUser")
@@ -80,8 +79,6 @@ public class AdminController {
         userService.updateUser(user);
         return "redirect:/admin/user";
     }
-
-
 
     @GetMapping("/orders")
     public String orderPage(@RequestParam(defaultValue = "0") String page, @RequestParam(defaultValue = "") String number, Model model){
@@ -166,6 +163,27 @@ public class AdminController {
         return "cake";
     }
 
+    @PostMapping("/deleteCake")
+    public String deleteCake(Cake cake){
+        try {
+            cakeService.deleteCake(cake.getId());
+        }
+        catch (CakeNotFoundException ignored) {
+        }
+        return "redirect:/admin/cakes";
+    }
+
+    @PostMapping("/deleteUser/{number}")
+    public String deleteUser(@PathVariable String number){
+        try {
+            userService.deleteUser(number);
+        }
+        catch (UserExistException ignored){
+            return "redirect:/admin";
+        }
+        return "redirect:/admin/orders";
+    }
+
     private String uploadImage(MultipartFile imgFile){
 
         Path relativePath = Paths.get("src/main/resources/static");
@@ -182,3 +200,13 @@ public class AdminController {
     }
 
 }
+
+
+
+
+
+//    @Value("${IMAGE_UPLOAD_PATH}")
+//    private String pathUpload;
+//
+//    @Autowired
+//    private HttpServletRequest request;

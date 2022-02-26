@@ -94,4 +94,12 @@ public class CakeServiceImpl implements CakeService {
         ce.setName(cake.getName());
         cakeRepository.save(ce);
     }
+
+    @Override
+    public void deleteCake(Long id) {
+        if(!cakeRepository.existsById(id)) {
+            throw new CakeNotFoundException("Cake with ID "+id+ " doesn't exist");
+        }
+        else cakeRepository.deleteById(id);
+    }
 }

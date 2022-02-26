@@ -11,4 +11,6 @@ public interface CakeService {
     void addCake(Cake cake);
     List<Cake> getSomeCake(Integer page, Integer size);
     void updateCake(Cake cake);
+
+    void deleteCake(Long id);
 }

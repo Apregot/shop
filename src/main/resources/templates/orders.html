@@ -27,7 +27,7 @@
         <th>Номер телефона заказчика</th>
         <th>Дата доставки</th>
         <th>Адрес доставки</th>
-        <th>Самовывоз или доставка</th>
+        <th>Доставка</th>
         <th>Тип оплаты</th>
         <th>Статус заказа</th>
         <th></th>
@@ -72,7 +72,7 @@
   <label> Адрес:
     <input type="text" th:field="*{address}" />
   </label>
-  <label> Способ доставки:
+  <label> Доставка:
     <select th:field="*{delivery}">
       <option th:each="delivery : ${T(com.melnikovsavva.shop.db.orders.enums.Delivery).values()}" th:value="${delivery}" th:text="${delivery}"></option>
     </select>

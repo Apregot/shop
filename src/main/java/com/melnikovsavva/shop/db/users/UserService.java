@@ -14,4 +14,6 @@ public interface UserService {
     List<User> getSomeUsers(Integer page);
     void updateUser(User user);
     User getUserByNumber(String number);
+
+    void deleteUser(String number) throws UserExistException;
 }

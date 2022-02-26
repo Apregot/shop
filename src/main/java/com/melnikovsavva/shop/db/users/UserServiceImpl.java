@@ -1,5 +1,8 @@
 package com.melnikovsavva.shop.db.users;
 
+import com.melnikovsavva.shop.db.orders.OrderEntity;
+import com.melnikovsavva.shop.db.orders.OrderRepository;
+import com.melnikovsavva.shop.db.orders.enums.OrderStatus;
 import com.melnikovsavva.shop.exception.UserExistException;
 import com.melnikovsavva.shop.rest.dto.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +18,12 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final OrderRepository orderRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, OrderRepository orderRepository) {
         this.userRepository = userRepository;
+        this.orderRepository = orderRepository;
     }
 
     @Override
@@ -29,6 +34,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getOrCreateUser(User user) {
+        if(user.getNumber().equals("")) {
+            return user;
+        }
         UserEntity userEntity = userRepository.findUserEntityByNumber(user.getNumber());
         if(userEntity != null){
             user.setId(userEntity.getId());
@@ -64,6 +72,28 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findUserEntityByNumber(number);;
         return mapUserEntityToUser(userEntity, new User());
     }
+
+    @Override
+    public void deleteUser(String number) throws UserExistException {
+        if(!userRepository.existsByNumber(number) ) {
+            throw new UserExistException("User with NUMBER "+number+ " can't delete");
+        }
+        else {
+            userRepository.deleteById( userRepository.findUserEntityByNumber(number).getId());
+        }
+    }
+
+
+
+//|| !FinishAllOrders(number)
+    boolean FinishAllOrders(String number){
+        List <OrderEntity> orderList = orderRepository.findOrderEntitiesByUser_Number(number);
+        for (OrderEntity el: orderList){
+            if (!el.getStatus().equals(OrderStatus.FINISHED)) return false;
+        }
+        return true;
+    }
+
 
     private User mapUserEntityToUser(UserEntity userEntity, User user){
         user.setId(userEntity.getId());

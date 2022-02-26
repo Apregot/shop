@@ -68,9 +68,7 @@ public class OrderServiceImpl implements OrderService{
     @Override
     public List<Order> getSomeOrder(Integer page) {
         Pageable limit = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "status"));
-        //List<OrderEntity> orderEntities = orderRepository.findAll();
         List<OrderEntity> orderEntities = orderRepository.findAll(limit).toList();
-        //Log.info();
         return orderEntities.stream().map(this::mapOrderEntityToOrder).collect(Collectors.toList());
     }
 
